@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nikhil Kamath — Engineering Portfolio</title>
+<meta name="description" content="Circuit design, PCB development, and hardware testing portfolio — Nikhil Kamath.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230D1B14'/%3E%3Ccircle cx='16' cy='16' r='4' fill='none' stroke='%23C1793E' stroke-width='2'/%3E%3Cpath d='M16 2v8M16 22v8M2 16h8M22 16h8' stroke='%23C1793E' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-dark:#0D1B14;
+    --pcb-green:#15311F;
+    --pcb-green-soft:#1B3B26;
+    --paper:#F5F6F1;
+    --paper-line:#E1E4DA;
+    --ink:#10201A;
+    --ink-soft:#3E4C43;
+    --silk:#E8EBE3;
+    --silk-dim:#9DAD9F;
+    --copper:#C1793E;
+    --copper-bright:#E39A56;
+    --amber:#E2A23B;
+    --radius:2px;
+    --maxw:1180px;
+    --edge:clamp(20px, 5vw, 64px);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Space Grotesk',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  ::selection{background:var(--copper);color:var(--bg-dark);}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- focus ---------- */
+  a:focus-visible,button:focus-visible{
+    outline:2px solid var(--copper);
+    outline-offset:3px;
+  }
+
+  /* ---------- nav ---------- */
+  header.site-nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(13,27,20,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(193,121,62,0.25);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto;
+    padding:16px var(--edge);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-logo{
+    color:var(--silk);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px; letter-spacing:0.04em;
+    text-decoration:none;
+    display:flex; align-items:center; gap:8px;
+  }
+  .nav-logo .dot{width:7px;height:7px;border-radius:50%;background:var(--copper);flex:none;}
+  nav.nav-links{display:flex; gap:28px; align-items:center;}
+  nav.nav-links a{
+    color:var(--silk-dim);
+    text-decoration:none;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.03em;
+    transition:color .15s ease;
+    padding:4px 0;
+  }
+  nav.nav-links a:hover{color:var(--copper-bright);}
+  .nav-toggle{
+    display:none;
+    background:none;border:1px solid rgba(193,121,62,0.4);
+    color:var(--silk); border-radius:var(--radius);
+    width:36px;height:32px; cursor:pointer;
+    font-family:'IBM Plex Mono',monospace; font-size:16px;
+  }
+
+  @media (max-width:720px){
+    nav.nav-links{
+      position:absolute; top:100%; left:0; right:0;
+      background:var(--bg-dark);
+      flex-direction:column; align-items:flex-start;
+      padding:18px var(--edge) 24px;
+      border-bottom:1px solid rgba(193,121,62,0.25);
+      display:none;
+      gap:16px;
+    }
+    nav.nav-links.open{display:flex;}
+    .nav-toggle{display:block;}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    background:var(--bg-dark);
+    color:var(--silk);
+    padding:clamp(64px,12vw,120px) var(--edge) clamp(56px,8vw,96px);
+    overflow:hidden;
+  }
+  .hero-inner{max-width:var(--maxw); margin:0 auto; position:relative; z-index:2;}
+  .hero-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--copper-bright);
+    letter-spacing:0.06em;
+    margin:0 0 18px;
+  }
+  .hero h1{
+    font-size:clamp(44px, 9vw, 96px);
+    line-height:0.98;
+    font-weight:700;
+    margin:0 0 22px;
+    letter-spacing:-0.01em;
+    max-width:14ch;
+  }
+  .hero-sub{
+    font-size:clamp(16px,2.1vw,19px);
+    color:var(--silk-dim);
+    max-width:46ch;
+    line-height:1.55;
+    margin:0 0 44px;
+  }
+
+  .spec-strip{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    border:1px solid rgba(193,121,62,0.35);
+    border-radius:var(--radius);
+    overflow:hidden;
+    max-width:760px;
+  }
+  .spec-cell{
+    padding:16px 18px;
+    border-right:1px solid rgba(193,121,62,0.35);
+  }
+  .spec-cell:last-child{border-right:none;}
+  .spec-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--copper-bright);
+    letter-spacing:0.08em;
+    margin-bottom:6px;
+  }
+  .spec-value{
+    font-size:14px;
+    color:var(--silk);
+    line-height:1.4;
+  }
+  @media (max-width:620px){
+    .spec-strip{grid-template-columns:1fr;}
+    .spec-cell{border-right:none; border-bottom:1px solid rgba(193,121,62,0.35);}
+    .spec-cell:last-child{border-bottom:none;}
+  }
+
+  .hero-traces{
+    position:absolute; inset:0; z-index:1;
+    opacity:0.55;
+    pointer-events:none;
+  }
+  .hero-traces path{
+    fill:none;
+    stroke:rgba(193,121,62,0.5);
+    stroke-width:1.3;
+    stroke-dasharray:900;
+    stroke-dashoffset:900;
+    animation:draw 2.6s ease-out forwards;
+  }
+  .hero-traces circle{
+    fill:var(--copper);
+    opacity:0;
+    animation:pop .4s ease-out forwards;
+  }
+  .hero-traces path:nth-child(2){animation-delay:.15s;}
+  .hero-traces path:nth-child(3){animation-delay:.3s;}
+  .hero-traces path:nth-child(4){animation-delay:.45s;}
+  @keyframes draw{to{stroke-dashoffset:0;}}
+  @keyframes pop{to{opacity:0.85;}}
+
+  /* ---------- section shell ---------- */
+  section{padding:clamp(64px,10vw,110px) var(--edge);}
+  .section-inner{max-width:var(--maxw); margin:0 auto;}
+  section.dark{background:var(--bg-dark); color:var(--silk);}
+  section.paper{background:var(--paper); color:var(--ink);}
+
+  /* title block, engineering-drawing style */
+  .title-block{
+    display:flex; flex-wrap:wrap; align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    border-bottom:1px solid;
+    padding-bottom:20px;
+    margin-bottom:44px;
+  }
+  .dark .title-block{border-color:rgba(193,121,62,0.35);}
+  .paper .title-block{border-color:var(--paper-line);}
+
+  .title-block-left .kicker{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.07em;
+    color:var(--copper);
+    margin-bottom:10px;
+  }
+  .title-block-left h2{
+    font-size:clamp(28px,4.2vw,44px);
+    line-height:1.05;
+    margin:0;
+    font-weight:600;
+    max-width:18ch;
+  }
+  .title-block-right{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    text-align:right;
+    line-height:1.7;
+  }
+  .dark .title-block-right{color:var(--silk-dim);}
+  .paper .title-block-right{color:var(--ink-soft);}
+  .title-block-right span{color:var(--copper);}
+
+  /* project layout */
+  .project-figure{
+    position:relative;
+    border:1px solid;
+    padding:14px;
+    background:rgba(0,0,0,0.15);
+  }
+  .dark .project-figure{border-color:rgba(193,121,62,0.3); background:rgba(255,255,255,0.02);}
+  .paper .project-figure{border-color:var(--paper-line); background:#fff;}
+  .project-figure img{width:100%; height:auto; border-radius:1px;}
+  .project-figure .reg{
+    position:absolute; width:14px; height:14px;
+    pointer-events:none;
+  }
+  .project-figure .reg::before,.project-figure .reg::after{
+    content:''; position:absolute; background:var(--copper);
+  }
+  .project-figure .reg::before{width:100%;height:1px;top:50%;transform:translateY(-50%);}
+  .project-figure .reg::after{height:100%;width:1px;left:50%;transform:translateX(-50%);}
+  .reg.tl{top:-7px;left:-7px;}
+  .reg.tr{top:-7px;right:-7px;}
+  .reg.bl{bottom:-7px;left:-7px;}
+  .reg.br{bottom:-7px;right:-7px;}
+
+  .fig-caption{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    margin-top:10px;
+    letter-spacing:0.02em;
+  }
+  .dark .fig-caption{color:var(--silk-dim);}
+  .paper .fig-caption{color:var(--ink-soft);}
+  .fig-caption b{color:var(--copper);font-weight:600;}
+
+  .project-lede{
+    font-size:clamp(16px,2vw,18px);
+    line-height:1.6;
+    max-width:56ch;
+    margin:0 0 30px;
+  }
+  .dark .project-lede{color:var(--silk);}
+  .paper .project-lede{color:var(--ink);}
+
+  .spec-list{list-style:none; margin:0 0 38px; padding:0; max-width:56ch;}
+  .spec-list li{
+    display:grid; grid-template-columns:22px 1fr; gap:12px;
+    padding:14px 0;
+    border-top:1px solid;
+    font-size:15px; line-height:1.55;
+  }
+  .dark .spec-list li{border-color:rgba(193,121,62,0.18); color:var(--silk-dim);}
+  .paper .spec-list li{border-color:var(--paper-line); color:var(--ink-soft);}
+  .spec-list li .pad{
+    width:8px;height:8px; margin-top:6px;
+    border:1.5px solid var(--copper);
+    transform:rotate(45deg);
+    flex:none;
+  }
+
+  .subhead{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    color:var(--copper);
+    margin:8px 0 16px;
+  }
+
+  .project-grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:56px;
+    align-items:start;
+  }
+  .project-grid.reverse{grid-template-columns:1fr 1.1fr;}
+  .project-grid.reverse .project-figure-col{order:2;}
+  @media (max-width:860px){
+    .project-grid,.project-grid.reverse{grid-template-columns:1fr;}
+    .project-grid.reverse .project-figure-col{order:0;}
+  }
+
+  .figure-pair{display:flex; flex-direction:column; gap:22px;}
+
+  /* ---------- credentials ---------- */
+  .cred-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+  @media (max-width:720px){.cred-grid{grid-template-columns:1fr;}}
+  .cred-card .project-figure{margin-bottom:14px;}
+  .cred-name{font-weight:600; font-size:16px; margin:0 0 4px;}
+  .cred-org{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- strengths ---------- */
+  .strength-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:rgba(193,121,62,0.3);
+    border:1px solid rgba(193,121,62,0.3);
+  }
+  @media (max-width:820px){.strength-grid{grid-template-columns:1fr;}}
+  .strength-card{
+    background:var(--bg-dark);
+    padding:32px 28px;
+  }
+  .strength-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--copper-bright);
+    margin-bottom:18px;
+  }
+  .strength-card h3{
+    font-size:19px; font-weight:600;
+    margin:0 0 12px;
+    color:var(--silk);
+  }
+  .strength-card p{
+    font-size:14.5px; line-height:1.6;
+    color:var(--silk-dim);
+    margin:0;
+  }
+
+  /* ---------- footer / contact ---------- */
+  footer{
+    background:var(--bg-dark);
+    color:var(--silk-dim);
+    padding:56px var(--edge) 36px;
+    border-top:1px solid rgba(193,121,62,0.25);
+  }
+  .footer-inner{
+    max-width:var(--maxw); margin:0 auto;
+    display:flex; flex-wrap:wrap;
+    justify-content:space-between;
+    gap:32px;
+  }
+  .footer-cta h2{
+    font-size:clamp(24px,4vw,34px);
+    color:var(--silk); margin:0 0 14px; font-weight:600;
+    max-width:16ch;
+  }
+  .contact-links{display:flex; flex-direction:column; gap:10px;}
+  .contact-links a{
+    text-decoration:none;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13.5px;
+    color:var(--silk);
+    border-bottom:1px solid rgba(193,121,62,0.4);
+    padding-bottom:2px;
+    width:fit-content;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .contact-links a:hover{color:var(--copper-bright); border-color:var(--copper-bright);}
+  .footer-meta{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:rgba(157,173,159,0.6);
+    margin-top:40px;
+    max-width:var(--maxw);
+    margin-left:auto; margin-right:auto;
+    padding-top:20px;
+    border-top:1px solid rgba(193,121,62,0.15);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo"><span class="dot"></span>Nikhil Kamath Engineering Portfolio</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">≡</button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#project-01">Project 01</a>
+      <a href="#project-02">Project 02</a>
+      <a href="#project-03">Project 03</a>
+      <a href="#credentials">Credentials</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <svg class="hero-traces" viewBox="0 0 1200 500" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 80 H260 L300 120 H520 L560 160 H900" />
+    <path d="M1200 60 H940 L900 100 H700 L660 140 H420" />
+    <path d="M0 420 H180 L220 380 H460 L500 340 H760 L800 380 H1200" />
+    <path d="M1200 460 H1000 L960 420 H700" />
+    <circle cx="260" cy="80" r="4"/><circle cx="520" cy="120" r="4"/><circle cx="900" cy="160" r="4"/>
+    <circle cx="940" cy="60" r="4"/><circle cx="700" cy="100" r="4"/><circle cx="420" cy="140" r="4"/>
+    <circle cx="180" cy="420" r="4"/><circle cx="460" cy="380" r="4"/><circle cx="760" cy="340" r="4"/>
+    <circle cx="1000" cy="460" r="4"/><circle cx="700" cy="420" r="4"/>
+  </svg>
+  <div class="hero-inner">
+    <p class="hero-eyebrow mono">ENGINEERING PORTFOLIO</p>
+    <h1>Nikhil Kamath</h1>
+    <p class="hero-sub">Penultimate Electrical and Electronic Engineering student at the University of Auckland with practical experience in circuit design, PCB development, sensor systems, and hardware testing.</p>
+  </div>
+</section>
+
+<section class="paper" id="about">
+  <div class="section-inner">
+    <div class="title-block">
+      <div class="title-block-left">
+        <h2>About Me</h2>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div>
+        <p class="project-lede">I am a penultimate-year Electrical and Electronics Engineering student at the University of Auckland, with a particular interest in PCB design, hardware development and testing. I am also interested in power electronics, control systems and high-voltage power engineering.</p>
+        <p class="project-lede">I enjoy working on projects where I can apply the theoretical knowledge from my studies to practical engineering problems. My experience includes power electronics, sensing and circuit design, with a focus on developing and testing hardware.</p>
+        <p class="project-lede">My work so far has involved PCB design, circuit simulation, hardware testing and optimisation, as well as selecting and integrating components to develop functional engineering solutions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT 01 -->
+<section class="dark" id="project-01">
+  <div class="section-inner">
+    <div class="title-block">
+      <div class="title-block-left">
+        <div class="kicker mono">PROJECT 01 — CIRCUIT DESIGN</div>
+        <h2>UARC Power Electronics &amp; Pyrotechnics Board</h2>
+      </div>
+      <div class="title-block-right mono">
+        <div><span>TEAM</span> — Power &amp; Pyrotechnics</div>
+        <div><span>CLUB</span> — University of Auckland Rocketry Club</div>
+        <div><span>TOOLS</span> — Altium, LTspice</div>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-figure-col">
+        <div class="figure-pair">
+          <div class="project-figure">
+            <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+            <img src="images/project1-board.jpg" alt="Assembled UARC power and pyrotechnics PCB, bench-tested and ready for the rocket.">
+          </div>
+          <p class="fig-caption"><b>FIG. 1.1</b> — Final PCB.</p>
+          <div class="project-figure">
+            <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+            <img src="images/project1-schematic.png" alt="Schematic of the buck converter and pyro enable logic stages.">
+          </div>
+          <p class="fig-caption"><b>FIG. 1.2</b> — Schematic of the system.</p>
+        </div>
+      </div>
+      <div>
+        <p class="project-lede">Designed a MOSFET-based pyro enable circuit using an AND gate and NPN transistor so ignition can only trigger when two independent conditions are met.</p>
+        <ul class="spec-list">
+          <li><span class="pad"></span><span>Simulated the circuit in LTspice to check switching behaviour and confirm component choices before building anything.</span></li>
+          <li><span class="pad"></span><span>Used datasheets to find optimal specifications for traces and designed the PCB for the power segment of the circuit.</span></li>
+        </ul>
+        <div class="subhead mono">CONSIDERATIONS</div>
+        <ul class="spec-list">
+          <li><span class="pad"></span><span>The circuit was designed so that the launch can only happen after 2 signals are recieved and are stable for 120ms.</span></li>
+          <li><span class="pad"></span><span>When laying out the board, the power segment was important, used datasheet to find optimal buck convertor and power plane placement.</span></li>
+          <li><span class="pad"></span><span>Simulation on LTSPICE helped select components which will meet the system requirements.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT 02 -->
+<section class="paper" id="project-02">
+  <div class="section-inner">
+    <div class="title-block">
+      <div class="title-block-left">
+        <div class="kicker mono">PROJECT 02 — ANALOG SENSING</div>
+        <h2>Analog Water Level Sensor</h2>
+      </div>
+      <div class="title-block-right mono">
+        <div><span>SYSTEM</span> — Analog sensing &amp; wireless transmission</div>
+        <div><span>METHOD</span> — Simulation, bench testing, oscilloscope</div>
+      </div>
+    </div>
+
+    <div class="project-grid reverse">
+      <div>
+        <p class="project-lede">Designed and built an analog sensing and transmission circuit to measure water levels, testing how different component choices affected range and accuracy.</p>
+        <ul class="spec-list">
+          <li><span class="pad"></span><span>Debugged and optimised the circuit so it would read accurately across 6 metres.</span></li>
+          <li><span class="pad"></span><span>Used bench testing to compare real readings against expected behaviour and make targeted improvements to the design.</span></li>
+        </ul>
+        <div class="subhead mono">HANDS-ON TESTING</div>
+        <ul class="spec-list">
+          <li><span class="pad"></span><span>Tested the circuit using an oscilloscope to see which sub circuits can be optimised to increase transmission range and reduce signal loss over distance.</span></li>
+          <li><span class="pad"></span><span>Using fundamentals we thought about which components effect range, the consequences of these changes and if they are worth it.</span></li>
+          <li><span class="pad"></span><span>The project helped me understand how simulation results can vary from real life due losses, non ideal components and also noise.</span></li>
+        </ul>
+      </div>
+      <div class="project-figure-col">
+        <div class="figure-pair">
+          <div class="project-figure">
+            <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+            <img src="images/project2-sensor.jpg" alt="Lens-focused sensor modules used in the water level sensing circuit.">
+          </div>
+          <p class="fig-caption"><b>FIG. 2.1</b> — The lens-focused sensing modules were the core of the water level system.</p>
+          <div class="project-figure">
+            <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+            <img src="images/project2-bench.jpg" alt="Bench testing the transmitted signal on an oscilloscope.">
+          </div>
+          <p class="fig-caption"><b>FIG. 2.2</b> — Confirming the signal behaviour with real measurements instead of assuming the simulation was enough.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT 03 -->
+<section class="dark" id="project-03">
+  <div class="section-inner">
+    <div class="title-block">
+      <div class="title-block-left">
+        <div class="kicker mono">PROJECT 03 — TEAM PROJECT</div>
+        <h2>Smart Energy Monitor</h2>
+      </div>
+      <div class="title-block-right mono">
+        <div><span>MEASURES</span> — Real-time voltage, current &amp; power</div>
+        <div><span>PLATFORM</span> — ESP32, 7-segment display</div>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-figure-col">
+        <div class="figure-pair">
+          <div class="project-figure">
+            <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+            <img src="images/project3-schematic.png" alt="Analog sensing and conditioning chain schematic for the Smart Energy Monitor.">
+          </div>
+          <p class="fig-caption"><b>FIG. 3.1</b> — The sensing chain for voltage, current, comparison, and offset generation feeding the control system.</p>
+          <div class="project-figure">
+            <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+            <img src="images/project3-board.jpg" alt="Built and tested Smart Energy Monitor board with 7-segment display.">
+          </div>
+          <p class="fig-caption"><b>FIG. 3.2</b> — The finished monitor board displaying live voltage, current, and power readings.</p>
+        </div>
+      </div>
+      <div>
+        <p class="project-lede">Worked in a team to design and develop an energy sensor which displays voltage, current and power in real time.</p>
+        <ul class="spec-list">
+          <li><span class="pad"></span><span>Used bench instruments to check accuracy and traced issues back to their source by applying theory and using simulation to validate the fix.</span></li>
+          <li><span class="pad"></span><span>Designed and tested the analog signal chain so the measured values remained accurate across the operating range.</span></li>
+        </ul>
+        <div class="subhead mono">BUILT &amp; VERIFIED</div>
+        <ul class="spec-list">
+          <li><span class="pad"></span><span>The board displayed live readings on a 7-segment display, translating the design into a working measurement system.</span></li>
+          <li><span class="pad"></span><span>Collaboration was important throughout the process, especially when identifying and fixing issues in the conditioning stages.</span></li>
+          <li><span class="pad"></span><span>Measurement validation with both meters and an oscilloscope helped confirm the system was reliable rather than just theoretically correct.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDENTIALS -->
+<section class="paper" id="credentials">
+  <div class="section-inner">
+    <div class="title-block">
+      <div class="title-block-left">
+        <div class="kicker mono">CREDENTIALS</div>
+        <h2>Certifications &amp; Recognition</h2>
+      </div>
+    </div>
+    <div class="cred-grid">
+      <div class="cred-card">
+        <div class="project-figure">
+          <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+          <img src="images/cert-deans.png" alt="Dean's Leadership Programme certificate, University of Auckland.">
+        </div>
+        <p class="cred-name">Dean's Leadership Programme (Core)</p>
+        <p class="cred-org mono">University of Auckland, Faculty of Engineering &amp; Design — 2026</p>
+      </div>
+      <div class="cred-card">
+        <div class="project-figure">
+          <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+          <img src="images/cert-altium.png" alt="Altium Education PCB Basic Design Course certificate.">
+        </div>
+        <p class="cred-name">Altium Education — PCB Basic Design Course</p>
+        <p class="cred-org mono">December 2025</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-inner">
+    <div class="contact-links">
+      <a href="mailto:nikhil29335@gmail.com">nikhil29335@gmail.com</a>
+      <a href="https://www.linkedin.com/in/nikhil-kamath-b36b35320/" target="_blank" rel="noopener">linkedin</a>
+    </div>
+  </div>
+  <div class="footer-meta">NIKHIL KAMATH ENGINEERING PORTFOLIO — REV. 2026</div>
+</footer>
+
+<script>
+  var toggle = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  toggle.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ links.classList.remove('open'); });
+  });
+</script>
+
+</body>
+</html>
